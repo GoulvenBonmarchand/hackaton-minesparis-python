@@ -2,8 +2,13 @@ from scipy.integrate import odeint
 import numpy as np
 
 class Dynamic():
-    def __init__(self,goos):
+    def __init__(self,goos,k,l0,m,g,lam):
         self.goos = goos
+        self.k = k 
+        self.l0 = l0
+        self.m = m
+        self.g = g
+        self.lam = lam
 
     def GoosToX(self):
         N = self.goos.shape[0]
@@ -20,9 +25,9 @@ class Dynamic():
             for v in goo.voisins:
                 vx, goox = np.array(X[4*v.id],X[4*v.id + 2]), np.array(X[4*goo.id],X[4*goo.id + 2])
                 d = np.linalg.norm(vx - goox)
-                mat[4*goo.id+1][4*v.id+1] = -k*(d-l0)*((goox-vx) @ ux)/d
-                mat[4*goo.id+3][4*v.id+3] = -k*(d-l0)*((goox-vx) @ uy)/d - m*g 
-        mat += np.diag(-lam* (np.arange(N) % 2 == 0))
+                mat[4*goo.id+1][4*v.id+1] = -self.k*(d-self.l0)*((goox-vx) @ ux)/d
+                mat[4*goo.id+3][4*v.id+3] = -self.k*(d-self.l0)*((goox-vx) @ uy)/d - self.m*self.g 
+        mat += np.diag(-self.lam* (np.arange(N) % 2 == 0))
         return mat.dot(X)
 
     def next_goods(self):
