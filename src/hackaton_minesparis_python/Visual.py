@@ -78,6 +78,14 @@ class Visual:
         except (pygame.error, FileNotFoundError):
             return None
 
+    def draw_background(self):
+        """Draw the background image or solid color."""
+        if self.background_image:
+            self.screen.blit(self.background_image, (0, 0))
+        else:
+            bg_color = self.colors.get(self.bg_color, self.colors["white"])
+            self.screen.fill(bg_color)
+
     def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
         """Convert mathematical coordinates to screen coordinates."""
         screen_x = int(x * self.scale + self.offset_x)
