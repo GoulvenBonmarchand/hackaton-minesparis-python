@@ -1,4 +1,4 @@
-from hackaton_minesparis_python.world import World
+from hackaton_minesparis_python.visualisation import Visualisation
 
 def main():
-    print("this game still in development")
+    Visualisation().run()
