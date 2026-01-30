@@ -1,10 +1,12 @@
 import numpy as np
 from hackaton_minesparis_python.goo import Goo, StaticGoo
+from dynamic import Dynamic
 
 class World:
     def __init__(self):
         self._goos = np.array([])
         self._platforms = np.array([])
+        self._dynamic = Dynamic(self._goos)
     
     @property
     def goos(self):
