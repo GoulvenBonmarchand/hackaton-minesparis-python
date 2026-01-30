@@ -2,7 +2,7 @@ from scipy.integrate import odeint
 import numpy as np
 
 class Dynamic():
-    def __init__(self,goos,k,l0,m,g,lam):
+    def __init__(self,goos,k = 200, l0 = 0.1, m = 0.4,g =9.81/20,lam = 0.15):
         self.goos = goos
         self.k = k 
         self.l0 = l0
