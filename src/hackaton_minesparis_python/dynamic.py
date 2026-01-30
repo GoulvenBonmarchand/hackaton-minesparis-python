@@ -31,8 +31,8 @@ class Dynamic():
         X_point = np.zeros(N)
         for goo in self._goos :
             X_point[4*goo.id],X_point[4*goo.id+2] = X[4*goo.id+1],X[4*goo.id+3]
-            X_point[4*goo.voisins+1] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ ux/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+1]
-            X_point[4*goo.voisins+3] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ uy/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+3] - self.m * self.g
+            X_point[4*goo.id+1] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ ux/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+1]
+            X_point[4*goo.id+3] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ uy/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+3] - self.m * self.g
         return X_point
 
     def next_goos(self):
