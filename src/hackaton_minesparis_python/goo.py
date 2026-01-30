@@ -7,9 +7,10 @@ def make_counter():
         count += 1
         return count
     return counter
-counter = make_counter()
 
 class Goo:
+    counter = make_counter()
+
     def __init__(self, pos, mass=1.0):
         self._pos = np.array(pos, dtype=float)
         self._vit = np.zeros(2, dtype=float)
