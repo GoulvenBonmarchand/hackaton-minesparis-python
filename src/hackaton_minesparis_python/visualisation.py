@@ -47,6 +47,7 @@ class Visualisation:
         self.game_won = False
         self.click_cooldown_ms = 250
         self._last_click_ms = 0
+        self._last_state = {}
 
     def _create_platforms(self) -> tuple[Platform, Platform]:
         h = self.height
@@ -112,6 +113,8 @@ class Visualisation:
             return False
         probe = np.array([x, y], dtype=float)
         for other in self.world.goos:
+            if np.allclose(probe, other.pos, atol=1e-6):
+                return False
             if distance(probe, other.pos) < self.min_spawn_distance:
                 return False
         return True
@@ -182,6 +185,8 @@ class Visualisation:
 
     def _draw_goos(self) -> None:
         for goo in self.world.goos:
+            if not np.all(np.isfinite(goo.pos)):
+                continue
             x, y = int(goo.pos[0]), int(goo.pos[1])
             pygame.draw.circle(self.screen, (10, 15, 20), (x + 2, y + 2), self.goo_radius + 1)
             pygame.draw.circle(self.screen, self.goo_color, (x, y), self.goo_radius)
@@ -191,6 +196,8 @@ class Visualisation:
             for v in goo.voisins:
                 if goo.id >= v.id:
                     continue
+                if not np.all(np.isfinite(goo.pos)) or not np.all(np.isfinite(v.pos)):
+                    continue
                 pygame.draw.line(
                     self.screen,
                     self.link_color,
@@ -198,6 +205,19 @@ class Visualisation:
                     (int(v.pos[0]), int(v.pos[1])),
                     2,
                 )
+
+    def _snapshot_state(self) -> None:
+        self._last_state = {
+            goo.id: (goo.pos.copy(), goo.vit.copy()) for goo in self.world.goos
+        }
+
+    def _restore_if_nan(self) -> None:
+        for goo in self.world.goos:
+            if not np.all(np.isfinite(goo.pos)) or not np.all(np.isfinite(goo.vit)):
+                prev = self._last_state.get(goo.id)
+                if prev is not None:
+                    goo.pos = prev[0]
+                    goo.vit = np.zeros_like(prev[1])
 
     def _draw_hud(self) -> None:
         panel = pygame.Surface((340, 70))
@@ -226,7 +246,9 @@ class Visualisation:
             self._handle_events()
 
             if len(self.world.goos) > 0:
+                self._snapshot_state()
                 self.world.step()
+                self._restore_if_nan()
 
             if not self.game_over and self._check_connected():
                 self.game_over = True

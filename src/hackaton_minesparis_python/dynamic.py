@@ -2,7 +2,7 @@ from scipy.integrate import odeint
 import numpy as np
 
 class Dynamic():
-    def __init__(self,goos,k = 100, l0 = 40, m = 0.4,g =9.81*5,lam = 1):
+    def __init__(self,goos,k = 100, l0 = 40, m = 100,g =9.81/20,lam = 1.5):
         self._goos = goos
         self.k = k 
         self.l0 = l0
@@ -27,12 +27,22 @@ class Dynamic():
     
     def update_function(self, X,t):
         N = X.shape[0]
-        ux, uy = np.array([1,0]),np.array([0,1])
         X_point = np.zeros(N)
         for goo in self._goos :
             X_point[4*goo.id],X_point[4*goo.id+2] = X[4*goo.id+1],X[4*goo.id+3]
-            X_point[4*goo.id+1] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ ux/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.id+1]
-            X_point[4*goo.id+3] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ uy/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.id+3] + self.m * self.g
+            ax = 0.0
+            ay = 0.0
+            for v in goo.voisins:
+                dx = X[4*v.id] - X[4*goo.id]
+                dy = X[4*v.id+2] - X[4*goo.id+2]
+                dist = np.sqrt(dx*dx + dy*dy)
+                if dist < 1e-4:
+                    continue
+                force = self.k * (dist - self.l0)
+                ax += force * (dx / dist)
+                ay += force * (dy / dist)
+            X_point[4*goo.id+1] = ax - self.lam*X[4*goo.id+1]
+            X_point[4*goo.id+3] = ay - self.lam*X[4*goo.id+3] + self.m * self.g
         return X_point
 
     def next_goos(self):

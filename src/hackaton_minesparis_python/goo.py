@@ -17,7 +17,7 @@ counterGoo = make_counter()
 
 class Goo:
     """Goo mobile avec position, vitesse, masse et voisins."""
-    def __init__(self, pos, world, mass=1.0):
+    def __init__(self, pos, world, mass=400):
         """Initialise un Goo avec position et masse."""
         self._pos = np.array(pos, dtype=float)
         self._vit = np.zeros(2, dtype=float)
@@ -70,7 +70,7 @@ class Goo:
                     i = k
 
             if m < distance_plateforme_min:
-                sgoo = StaticGoo(liste_projetes[i], self._mass)
+                sgoo = StaticGoo(liste_projetes[i], self._world, self._mass)
                 self._world.new_goos(sgoo)
                 self._voisins.append(sgoo)
             else:
