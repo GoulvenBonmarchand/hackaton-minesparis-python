@@ -7,10 +7,14 @@ authors = [
     { name = "GoulvenBonmarchand", email = "goulven.bonmarchand@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.1",
+    "pygame>=2.6.1",
+]
 
 [project.scripts]
-hackaton-minesparis-python = "hackaton_minesparis_python:main"
+goo = "hackaton_minesparis_python.main:main"
 
 [build-system]
 requires = ["uv_build>=0.9.5,<0.10.0"]
