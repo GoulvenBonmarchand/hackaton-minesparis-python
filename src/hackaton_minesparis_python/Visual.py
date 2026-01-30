@@ -33,3 +33,25 @@ class Visual:
         y = (screen_y - self.offset_y) / self.scale
         return (x, y)
     
+    def update_events(self):
+        # Handle Pygame events 
+
+        ## Mouse click -> create a goo 
+
+        ## Exit the game 
+
+        ## End of the game (LOSE)
+
+        ## End of the game (WIN) 
+        pass
+
+
+    
+    def end_of_the_game(self):
+        #Implement win condition 
+        #Implement lose condition 
+
+        pass
+
+
+
