@@ -1,4 +1,4 @@
-improt numpy as np 
+import numpy as np 
 
 def make_counter():
     count = -1
@@ -27,14 +27,6 @@ class Goo:
         return count
     return counter
     
-    @setter
-    def pos(self, new_pos):
-        self._pos = np.array(new_pos, dtype=float)
-
-    @setter
-    def vit(self, new_vit):
-        self._vit = np.array(new_vit, dtype=float)
-
     @property
     def pos(self):
         return self._pos
@@ -42,6 +34,26 @@ class Goo:
     @property
     def vit(self):
         return self._vit
+
+    @property
+    def mass(self):
+        return self._mass
+
+    @property
+    def nm(self):
+        return self._nm
+
+    @property
+    def voisin(self):
+        return self._voisin
+
+    @setter
+    def pos(self, new_pos):
+        self._pos = np.array(new_pos, dtype=float)
+
+    @setter
+    def vit(self, new_vit):
+        self._vit = np.array(new_vit, dtype=float)
 
 class StaticGoo(Goo):
     def __init__(self, pos, mass=1.0):

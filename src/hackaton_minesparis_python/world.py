@@ -2,8 +2,8 @@ import numpy as np
 
 class World:
     def __init__(self):
-        self._goos = []
-        self._platforms = []
+        self._goos = np.array([])
+        self._platforms = np.array([])
     
     @property
     def goos(self):
@@ -13,12 +13,10 @@ class World:
     def platforms(self):
         return self._platforms
     
-    @setter
-    def goos(self, new_goos):
-        self._goos = new_goos   
+    def new_goos(self, new_goos):
+        self._goos = np.append(self._goos, new_goos)
     
-    @setter
-    def platforms(self, new_platforms):
-        self._platforms = new_platforms
+    def new_platforms(self, new_platforms):
+        self._platforms = np.append(self._platforms, new_platforms)
 
     
