@@ -12,7 +12,6 @@ def get_visual_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "-h",
-        action="store",
         type=int, 
         default=600
         help="Height of the game window.",
@@ -20,7 +19,6 @@ def get_visual_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "-w",
-        action="store",
         type=int, 
         default=800
         help="Width of the game window.",
@@ -28,7 +26,6 @@ def get_visual_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "-fps",
-        action="store",
         type=int, 
         default=30,
         help="Frames per second for the game loop.",
@@ -36,11 +33,19 @@ def get_visual_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "-g",
-        action="store",
         type=int, 
         default=50,
         help="Limits of goos in the game",
     )
+
+    parser.add_argument(
+        "-bg_color",
+        type=str, 
+        default="white",
+        help="Color of the Background",
+    )
+
+
 
 
     
