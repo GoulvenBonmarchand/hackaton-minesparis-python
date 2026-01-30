@@ -27,7 +27,7 @@ def get_visual_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--fps",
         type=int,
-        default=30,
+        default=24,
         help="Frames per second for the game loop.",
     )
 
