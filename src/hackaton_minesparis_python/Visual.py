@@ -47,7 +47,28 @@ class Visual:
 
         )
 
-        
+        # Load images (with fallback to colored shapes)
+        self.background_image = self._load_image("Assets/background_image.jpeg", (self.width, self.height))
+        self.goo_image = self._load_image("Assets/goo_image.jpeg", (30, 30))
+
+        # Fonts
+        self.font = pygame.font.Font(None, 36)
+        self.large_font = pygame.font.Font(None, 72)
+
+        # Colors
+        self.colors = {
+            "white": (255, 255, 255),
+            "black": (0, 0, 0),
+            "red": (255, 0, 0),
+            "green": (0, 255, 0),
+            "blue": (0, 0, 255),
+            "gray": (128, 128, 128),
+            "yellow": (255, 255, 0),
+            "platform_start": (100, 200, 100),
+            "platform_end": (200, 100, 100),
+            "goo_color": (50, 150, 50),
+            "line_color": (80, 80, 80),
+        }
 
     def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
         """Convert mathematical coordinates to screen coordinates."""
