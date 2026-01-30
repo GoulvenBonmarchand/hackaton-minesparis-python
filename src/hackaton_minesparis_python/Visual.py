@@ -154,7 +154,7 @@ class Visual:
         """Check if the player has lost (goo limit exceeded)."""
         return len(self.goos) >= self.goos_limit
 
-        
+
     def update_events(self):
 
 
@@ -197,3 +197,29 @@ class Visual:
         ###Display end of the game messsage
 
         pass
+
+    def end_of_the_game(self):
+        """Check and handle win/lose conditions."""
+        # Win condition: two platforms are connected by goos
+        if self.check_win_condition():
+            self.game_over = True
+            self.game_won = True
+            return
+
+        # Lose condition: number of goos exceeds the limit
+        if self.check_lose_condition():
+            self.game_over = True
+            self.game_won = False
+            return
+
+    def reset_game(self):
+        """Reset the game to initial state."""
+        self.goos.clear()
+        self.new_goos.clear()
+        self.game_over = False
+        self.game_won = False
+
+    def run(self):
+        """Main game loop."""
+        while True:
+            self.update_events()
