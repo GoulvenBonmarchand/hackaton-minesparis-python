@@ -70,6 +70,14 @@ class Visual:
             "line_color": (80, 80, 80),
         }
 
+    def _load_image(self, path: str, size: tuple[int, int]) -> pygame.Surface | None:
+        """Load an image from path with fallback to None."""
+        try:
+            image = pygame.image.load(path).convert_alpha()
+            return pygame.transform.scale(image, size)
+        except (pygame.error, FileNotFoundError):
+            return None
+
     def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
         """Convert mathematical coordinates to screen coordinates."""
         screen_x = int(x * self.scale + self.offset_x)
