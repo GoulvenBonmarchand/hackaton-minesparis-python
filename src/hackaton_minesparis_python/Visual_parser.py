@@ -1,8 +1,8 @@
-import argparse 
+import argparse
 
 def get_visual_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Visual parameters for The World of Goos."
+        description="Parameters for The World of Goos."
     )
     parser.add_argument(
         "--visual",
@@ -11,43 +11,38 @@ def get_visual_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "-h",
-        type=int, 
-        default=600
+        "--height", "-H", 
+        type=int,
+        default=600,  
         help="Height of the game window.",
     )
 
     parser.add_argument(
-        "-w",
-        type=int, 
-        default=800
+        "--width", "-w",
+        type=int,
+        default=800,  
         help="Width of the game window.",
     )
 
     parser.add_argument(
-        "-fps",
-        type=int, 
+        "--fps",
+        type=int,
         default=30,
         help="Frames per second for the game loop.",
     )
 
     parser.add_argument(
-        "-g",
-        type=int, 
+        "-g", "--goos",
+        type=int,
         default=50,
-        help="Limits of goos in the game",
+        help="Limits of goos in the game.",
     )
 
     parser.add_argument(
-        "-bg_color",
-        type=str, 
+        "--bg_color",
+        type=str,
         default="white",
-        help="Color of the Background",
+        help="Color of the Background.",
     )
-
-
-
-
-    
 
     return parser

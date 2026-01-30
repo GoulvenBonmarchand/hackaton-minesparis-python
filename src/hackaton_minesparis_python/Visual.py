@@ -6,21 +6,48 @@ class Visual:
     args = get_visual_parser().parse_args()
 
     def __init__(self):
-        # Initizalize Game parameters from args
-        self.width=self.args.w
-        self.height=self.args.h 
-        self.fps=self.args.fps 
-        self.goos_limit=self.args.g
+        # Initialize Pygame
+        pygame.init()
+        pygame.font.init()
+
+        # Initialize Game parameters from args
+        self.width = self.args.w
+        self.height = self.args.h
+        self.fps = self.args.fps
+        self.goos_limit = self.args.g
+        self.bg_color = self.args.bg_color
 
         # Initialize Pygame screen
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("The World of Goos")
 
+        # Clock for FPS control
+        self.clock = pygame.time.Clock()
+
         # Coordinate transformation parameters
-        self.scale = 1.0 
-        self.offset_x = 0 
+        self.scale = 1.0
+        self.offset_x = 0
         self.offset_y = 0
-    
+
+        # Game state
+        self.goos: list[Goo] = []
+        self.new_goos: list[Goo] = []
+        self.game_over = False
+        self.game_won = False
+
+        # Initialize platforms
+        self.departure_platform = Platform(
+            x=50,
+            y=self.height - 100,
+
+        )
+        self.end_platform = Platform(
+            x=self.width - 200,
+            y=self.height - 100,
+
+        )
+
+        
 
     def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
         """Convert mathematical coordinates to screen coordinates."""
@@ -75,6 +102,3 @@ class Visual:
         ###Display end of the game messsage
 
         pass
-
-
-
