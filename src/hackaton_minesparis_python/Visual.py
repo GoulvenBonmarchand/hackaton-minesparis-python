@@ -77,6 +77,19 @@ class Visual:
             return pygame.transform.scale(image, size)
         except (pygame.error, FileNotFoundError):
             return None
+    
+    def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
+        """Convert mathematical coordinates to screen coordinates."""
+        screen_x = int(x * self.scale + self.offset_x)
+        screen_y = int(y * self.scale + self.offset_y)
+        return (screen_x, screen_y)
+    
+    def screen_to_maths(self, screen_x: int, screen_y: int) -> tuple[float, float]:
+        """Convert screen coordinates to mathematical coordinates."""
+        x = (screen_x - self.offset_x) / self.scale
+        y = (screen_y - self.offset_y) / self.scale
+        return (x, y)
+    
 
     def draw_background(self):
         """Draw the background image or solid color."""
@@ -125,21 +138,15 @@ class Visual:
 
         self.screen.blit(text_surface, text_rect)
     
+    def draw_platforms(self):
+        """Draw the start and end platforms."""
+        pass
     
-    
-            
+    def draw_goo_connections(self):
+        """Draw lines connecting goos."""
+        pass
 
-    def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
-        """Convert mathematical coordinates to screen coordinates."""
-        screen_x = int(x * self.scale + self.offset_x)
-        screen_y = int(y * self.scale + self.offset_y)
-        return (screen_x, screen_y)
-    
-    def screen_to_maths(self, screen_x: int, screen_y: int) -> tuple[float, float]:
-        """Convert screen coordinates to mathematical coordinates."""
-        x = (screen_x - self.offset_x) / self.scale
-        y = (screen_y - self.offset_y) / self.scale
-        return (x, y)
+
     
     def check_bridge_connected(self) -> bool:
         """Check if the bridge is connected between start and end platforms."""
@@ -153,51 +160,7 @@ class Visual:
     def check_lose_condition(self) -> bool:
         """Check if the player has lost (goo limit exceeded)."""
         return len(self.goos) >= self.goos_limit
-
-
-    def update_events(self):
-
-
-        # Handle Pygame events 
-        for event in pygame.event.get():
-            ## Exit the game 
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            
-            ## Mouse click -> create a goo 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                goos_limit_reached = len()
-                if goos_limit_reached: 
-
-                mouse_x, mouse_y = event.pos 
-                math_x, math_y = self.screen_to_maths(mouse_x, mouse_y)
-                
-                new_goo = Goo(math_x, math_y)   #create a goo at (math_x, math_y) using a class Goo 
-                display.new_goos.append(new_goo) #Add new_goo to the game goo list 
-
-            ## End of the game (LOSE)
-
-
-            ## End of the game (WIN)  
-
-        pygame.display.flip()       
-        
-        pass
-
-
     
-    def end_of_the_game(self):
-        #Implement win condition
-        ## if the two bridges are connected 
-        ###Display end of the game messsage
-         
-        #Implement lose condition 
-        ## if the number of goos exceed the limit 
-        ###Display end of the game messsage
-
-        pass
-
     def end_of_the_game(self):
         """Check and handle win/lose conditions."""
         # Win condition: two platforms are connected by goos
@@ -222,4 +185,69 @@ class Visual:
     def run(self):
         """Main game loop."""
         while True:
-            self.update_events()
+            self.update()
+
+    def update_events(self):
+        """Handle all Pygame events."""
+        # Handle Pygame events
+        for event in pygame.event.get():
+            # Exit the game
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+
+            # Handle key presses
+            if event.type == pygame.KEYDOWN:
+                if self.game_over:
+                    if event.key == pygame.K_r:
+                        self.reset_game()
+                    elif event.key == pygame.K_q:
+                        pygame.quit()
+                        exit()
+
+            # Mouse click -> create a goo 
+            if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:
+                # Check if goo limit is reached
+                if len(self.goos) >= self.goos_limit:
+                    continue  # Don't create more goos
+
+                mouse_x, mouse_y = event.pos
+                math_x, math_y = self.screen_to_maths(mouse_x, mouse_y)
+
+                # Create a new goo at (math_x, math_y)
+                new_goo = Goo(math_x, math_y)
+                self.new_goos.append(new_goo)
+
+        # Add new goos to the main list
+        self.goos.extend(self.new_goos)
+        self.new_goos.clear()
+
+    def update(self):
+        """Main update method"""
+        # Handle events
+        self.update_events()
+
+        # Draw everything
+        self.draw_background()
+        self.draw_platforms()
+        self.draw_goo_connections()
+        self.draw_goos()
+        self.draw_goo_counter()
+
+        # Check end conditions (only if game is not already over)
+        if not self.game_over:
+            self.end_of_the_game()
+
+        # If game is over, display the message
+        if self.game_over:
+            self.display_game_over_message(self.game_won)
+
+        # Update display
+        pygame.display.flip()
+
+        # Control frame rate
+        self.clock.tick(self.fps)
+    
+    
+
+    
