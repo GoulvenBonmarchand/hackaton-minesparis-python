@@ -1,4 +1,5 @@
 import numpy as np
+from hackaton_minesparis_python.goo import Goo, StaticGoo
 
 class World:
     def __init__(self):
