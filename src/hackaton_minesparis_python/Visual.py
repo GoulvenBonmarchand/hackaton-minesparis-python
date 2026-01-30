@@ -97,6 +97,34 @@ class Visual:
                 self.screen.blit(self.goo_image, image_rect)
             else:
                 return (pygame.error, FileNotFoundError)
+        
+    def draw_goo_counter(self):
+        """Display the number of goos remaining."""
+        goos_used = len(self.goos)
+        goos_remaining = self.goos_limit - goos_used
+
+        # Create counter text
+        counter_text = f"Goos: {goos_used}/{self.goos_limit} (Remaining: {goos_remaining})"
+
+        # Choose color based on remaining goos
+        if goos_remaining <= 5:
+            text_color = self.colors["red"]
+        elif goos_remaining <= 15:
+            text_color = self.colors["yellow"]
+        else:
+            text_color = self.colors["black"]
+
+        # Render and display
+        text_surface = self.font.render(counter_text, True, text_color)
+        text_rect = text_surface.get_rect(topleft=(10, 10))
+
+        # Draw background for better readability
+        bg_rect = text_rect.inflate(10, 5)
+        pygame.draw.rect(self.screen, (255, 255, 255, 180), bg_rect)
+        pygame.draw.rect(self.screen, self.colors["black"], bg_rect, 1)
+
+        self.screen.blit(text_surface, text_rect)
+    
     
     
             
@@ -113,7 +141,22 @@ class Visual:
         y = (screen_y - self.offset_y) / self.scale
         return (x, y)
     
+    def check_bridge_connected(self) -> bool:
+        """Check if the bridge is connected between start and end platforms."""
+        # actual connection check
+        return False
+
+    def check_win_condition(self) -> bool:
+        """Check if the player has won (bridge connected)."""
+        return self.check_bridge_connected()
+
+    def check_lose_condition(self) -> bool:
+        """Check if the player has lost (goo limit exceeded)."""
+        return len(self.goos) >= self.goos_limit
+
+        
     def update_events(self):
+
 
         # Handle Pygame events 
         for event in pygame.event.get():
