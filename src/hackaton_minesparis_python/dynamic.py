@@ -26,5 +26,5 @@ class Dynamic():
         return mat.dot(X)
 
     def next_goods(self):
-        liste_temps = np.arrange(0,24/60,10)
-        return odeint(update_function,self.goods, liste_temps)[-1]
+        liste_temps = np.linspace(0,24/60,10)
+        return odeint(self.update_function, self.GoosToX(), liste_temps)[-1]
