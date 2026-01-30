@@ -7,9 +7,9 @@ def make_counter():
         count += 1
         return count
     return counter
+counterGoo = make_counter()
 
 class Goo:
-    counter = make_counter()
 
     def __init__(self, pos, mass=1.0):
         self._pos = np.array(pos, dtype=float)
@@ -18,14 +18,7 @@ class Goo:
         self._voisin = []
         #self.ppvoisin() in dev
         #self.ppplateforme() in dev
-        self._nm = counter()
-
-    count = 0
-    def counter():
-        nonlocal count
-        count += 1
-        return count
-    return counter
+        self._nm = counterGoo()
     
     @property
     def pos(self):
@@ -47,11 +40,11 @@ class Goo:
     def voisin(self):
         return self._voisin
 
-    @setter
+    @pos.setter
     def pos(self, new_pos):
         self._pos = np.array(new_pos, dtype=float)
 
-    @setter
+    @vit.setter
     def vit(self, new_vit):
         self._vit = np.array(new_vit, dtype=float)
 
