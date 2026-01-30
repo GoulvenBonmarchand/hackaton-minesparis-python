@@ -1,7 +1,7 @@
 import numpy as np
 
 def somme_vecteurs(a,b):
-    return np.array(a[0]+b[0],a[1]+b[1])
+    return np.array([a[0] + b[0], a[1] + b[1]])
 
 def vect(point1, point2):
     return np.array([point2[0]-point1[0], point2[1]-point1[1]])

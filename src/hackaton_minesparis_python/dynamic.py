@@ -2,7 +2,7 @@ from scipy.integrate import odeint
 import numpy as np
 
 class Dynamic():
-    def __init__(self,goos,k = 200, l0 = 0.1, m = 0.4,g =9.81/20,lam = 0.15):
+    def __init__(self,goos,k = 100, l0 = 40, m = 0.4,g =9.81*5,lam = 1):
         self._goos = goos
         self.k = k 
         self.l0 = l0
@@ -31,10 +31,19 @@ class Dynamic():
         X_point = np.zeros(N)
         for goo in self._goos :
             X_point[4*goo.id],X_point[4*goo.id+2] = X[4*goo.id+1],X[4*goo.id+3]
-            X_point[4*goo.id+1] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ ux/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+1]
-            X_point[4*goo.id+3] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ uy/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+3] - self.m * self.g
+            X_point[4*goo.id+1] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ ux/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.id+1]
+            X_point[4*goo.id+3] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ uy/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.id+3] + self.m * self.g
         return X_point
 
     def next_goos(self):
-        liste_temps = np.linspace(0,24/60,10)
-        return odeint(self.update_function, self.GoosToX(), liste_temps)[-1]
+        # integrate over one frame (~1/24 s) with smaller steps for stability
+        t_end = 1/24
+        liste_temps = np.linspace(0, t_end, 6)
+        return odeint(
+            self.update_function,
+            self.GoosToX(),
+            liste_temps,
+            rtol=1e-5,
+            atol=1e-7,
+            mxstep=2000,
+        )[-1]

@@ -28,7 +28,7 @@ class World:
         self._platforms = np.append(self._platforms, new_platforms)
 
     def step(self):
-        X_next = self._dynamic.next_goods()
+        X_next = self._dynamic.next_goos()
         for goo in self._goos:
             base = 4 * goo.id
             goo.pos = [X_next[base], X_next[base + 2]]
