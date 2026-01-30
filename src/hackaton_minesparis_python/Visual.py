@@ -85,6 +85,21 @@ class Visual:
         else:
             bg_color = self.colors.get(self.bg_color, self.colors["white"])
             self.screen.fill(bg_color)
+        
+    def draw_goos(self):
+        """Draw all goos on the screen."""
+        for goo in self.goos:
+            screen_x, screen_y = self.maths_to_screen(goo.x, goo.y)
+
+            if self.goo_image:
+                # Center the image on the goo position
+                image_rect = self.goo_image.get_rect(center=(screen_x, screen_y))
+                self.screen.blit(self.goo_image, image_rect)
+            else:
+                return (pygame.error, FileNotFoundError)
+    
+    
+            
 
     def maths_to_screen(self, x: float, y: float) -> tuple[int, int]:
         """Convert mathematical coordinates to screen coordinates."""
