@@ -27,19 +27,13 @@ class Dynamic():
     
     def update_function(self, X,t):
         N = X.shape[0]
-        mat = np.zeros((N,N))
         ux, uy = np.array([1,0]),np.array([0,1])
+        X_point = np.zeros(N)
         for goo in self._goos :
-            # Liens cinématiques: x' = vx, y' = vy
-            mat[4*goo.id][4*goo.id+1] = 1
-            mat[4*goo.id+2][4*goo.id+3] = 1
-            for v in goo.voisins:
-                vx, goox = np.array([X[4*v.id],X[4*v.id + 2]]), np.array([X[4*goo.id],X[4*goo.id + 2]])
-                d = np.linalg.norm(vx - goox)
-                mat[4*goo.id+1][4*v.id+1] = -self.k*(d-self.l0)*((goox-vx) @ ux)/d
-                mat[4*goo.id+3][4*v.id+3] = -self.k*(d-self.l0)*((goox-vx) @ uy)/d   
-        mat += np.diag(-self.lam* (np.arange(N) % 2 == 1))
-        return mat.dot(X)-self.m*self.g*(np.arange(N) % 4 == 3)
+            X_point[4*goo.id],X_point[4*goo.id+2] = X[4*goo.id+1],X[4*goo.id+3]
+            X_point[4*goo.voisins+1] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ ux/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+1]
+            X_point[4*goo.voisins+3] = -self.k*sum([(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2) + -self.l0)* np.array([X[4*goo.id]-X[4*v.id],X[4*goo.id+2]-X[4*v.id+2]])@ uy/(((X[4*v.id]-X[4*goo.id])**2 + (X[4*v.id+2 ]-X[4*goo.id+ 2])**2)**(1/2)) for v in goo.voisins]) - self.lam*X[4*goo.voisins+3] - self.m * self.g
+        return X_point
 
     def next_goos(self):
         liste_temps = np.linspace(0,24/60,10)
